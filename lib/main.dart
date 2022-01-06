@@ -6,6 +6,7 @@ import 'package:instagram_responsive_app/responsive/mobile_screen_layout.dart';
 import 'package:instagram_responsive_app/responsive/responsive_layout_screen.dart';
 import 'package:instagram_responsive_app/responsive/web_screen_layout.dart';
 import 'package:instagram_responsive_app/screens/login_screen.dart';
+import 'package:instagram_responsive_app/screens/signup_screen.dart';
 import 'package:instagram_responsive_app/utils/colors.dart';
 
 void main() async {
@@ -13,7 +14,6 @@ void main() async {
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
-        // apiKey: 'AIzaSyBy3ydTw-NdRGJ4EZu1oD9YjtgrjGoHokI',
         apiKey: FirebaseConfig.API_KEY,
         appId: FirebaseConfig.APP_ID,
         messagingSenderId: FirebaseConfig.MESSAGING_SENDER_ID,
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
       //   mobileScreenLayout: MobileScreenLayout(),
       //   webScreenLayout: WebScreenLayout(),
       // ),
-      home: LoginScreen(),
+      home: SignupScreen(),
     );
   }
 }
