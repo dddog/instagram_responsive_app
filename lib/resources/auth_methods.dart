@@ -18,10 +18,10 @@ class AuthMethods {
   }) async {
     String res = "Some error occurred";
     try {
-      if (email.isNotEmpty ||
-          password.isNotEmpty ||
-          username.isNotEmpty ||
-          bio.isNotEmpty ||
+      if (email.isNotEmpty &&
+          password.isNotEmpty &&
+          username.isNotEmpty &&
+          bio.isNotEmpty &&
           file != null) {
         // register user
         UserCredential cred = await _auth.createUserWithEmailAndPassword(
@@ -49,6 +49,33 @@ class AuthMethods {
         res = 'The email is badly formatted.';
       } else if (err.code == 'weak-password') {
         res = 'Password should be at least 6 characters.';
+      }
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+
+  // loggin in user
+  Future<String> loginUser({
+    required String email,
+    required String password,
+  }) async {
+    String res = "Some error occurred";
+
+    try {
+      if (email.isNotEmpty && password.isNotEmpty) {
+        UserCredential user = await _auth.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        res = "success";
+      } else {
+        res = "Please enter all the fields";
+      }
+    } on FirebaseAuthException catch (err) {
+      if (err.code == 'wrong-password') {
+        res = "비밀번호 틀렸습니다.";
       }
     } catch (err) {
       res = err.toString();

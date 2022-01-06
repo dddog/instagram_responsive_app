@@ -14,11 +14,11 @@ void main() async {
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
-        apiKey: FirebaseConfig.API_KEY,
-        appId: FirebaseConfig.APP_ID,
-        messagingSenderId: FirebaseConfig.MESSAGING_SENDER_ID,
-        projectId: FirebaseConfig.PROJECT_ID,
-        storageBucket: FirebaseConfig.STORAGE_BUCKET,
+        apiKey: FirebaseConfig.apiKey,
+        appId: FirebaseConfig.appId,
+        messagingSenderId: FirebaseConfig.messagingSenderId,
+        projectId: FirebaseConfig.projectId,
+        storageBucket: FirebaseConfig.storageBucket,
       ),
     );
   } else {
@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
       //   mobileScreenLayout: MobileScreenLayout(),
       //   webScreenLayout: WebScreenLayout(),
       // ),
-      home: SignupScreen(),
+      home: LoginScreen(),
     );
   }
 }
