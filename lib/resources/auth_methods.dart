@@ -8,6 +8,7 @@ class AuthMethods {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  // TODO 프로필 이미지 안줬을때도 되도록 해볼것
   // sign up user
   Future<String> signUpUser({
     required String email,
