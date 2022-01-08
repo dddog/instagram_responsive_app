@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:instagram_responsive_app/models/user.dart' as model;
 import 'package:instagram_responsive_app/providers/user_provider.dart';
 import 'package:instagram_responsive_app/utils/colors.dart';
+import 'package:instagram_responsive_app/utils/global_variables.dart';
 import 'package:provider/provider.dart';
 
 class MobileScreenLayout extends StatefulWidget {
@@ -46,13 +47,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
     // model.User user = Provider.of<UserProvider>(context).getUser;
     return Scaffold(
       body: PageView(
-        children: [
-          Text('home'),
-          Text('search'),
-          Text('add'),
-          Text('fav'),
-          Text('profile'),
-        ],
+        children: homeScreenItems,
         physics: const NeverScrollableScrollPhysics(), // 옆으로 화면 넘기는 기능 막는거
         controller: pageController,
         onPageChanged: onPageChanged,
