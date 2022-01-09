@@ -16,8 +16,10 @@ class AuthMethods {
 
     DocumentSnapshot snap =
         await _firestore.collection('users').doc(currentUser.uid).get();
-
-    return model.User.fromSanp(snap);
+    if (!snap.exists) {
+      throw Exception("User : Does not exists");
+    }
+    return model.User.fromJson(snap.data() as Map<String, dynamic>);
   }
 
   // TODO 프로필 이미지 안줬을때도 되도록 해볼것
@@ -38,13 +40,18 @@ class AuthMethods {
           file != null) {
         // register user
         UserCredential cred = await _auth.createUserWithEmailAndPassword(
-            email: email, password: password);
+          email: email,
+          password: password,
+        );
         print(cred.user!.uid);
 
-        String photoUrl = await StorageMethods()
-            .uploadImageToStorage('profilePics', file, false);
+        String photoUrl = await StorageMethods().uploadImageToStorage(
+          'profilePics',
+          file,
+          false,
+        );
 
-        model.User user = model.User(
+        model.User _user = model.User(
           username: username,
           uid: cred.user!.uid,
           email: email,
@@ -55,10 +62,7 @@ class AuthMethods {
         );
 
         // add user to our database
-        await _firestore
-            .collection('users')
-            .doc(cred.user!.uid)
-            .set(user.toJson());
+        await _firestore.collection('users').doc(_user.uid).set(_user.toJson());
 
         res = "success";
       }

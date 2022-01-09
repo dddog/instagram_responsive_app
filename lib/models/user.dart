@@ -29,17 +29,17 @@ class User {
         "following": following,
       };
 
-  static User fromSanp(DocumentSnapshot snap) {
-    var data = snap.data() as Map<String, dynamic>;
+  static User fromJson(Map<String, dynamic> json) {
+    // var snapshot = snap.data() as Map<String, dynamic>;
 
     return User(
-      username: data['username'],
-      uid: data['uid'],
-      email: data['email'],
-      photoUrl: data['photoUrl'],
-      bio: data['bio'],
-      followers: data['followers'],
-      following: data['following'],
+      username: json['username'],
+      uid: json['uid'],
+      email: json['email'],
+      photoUrl: json['photoUrl'],
+      bio: json['bio'],
+      followers: json['followers'],
+      following: json['following'],
     );
   }
 }
