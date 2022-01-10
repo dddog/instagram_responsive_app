@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:instagram_responsive_app/utils/colors.dart';
+import 'package:intl/intl.dart';
 
 class CommentCard extends StatefulWidget {
-  const CommentCard({Key? key}) : super(key: key);
+  final dynamic snap;
+  const CommentCard({Key? key, required this.snap}) : super(key: key);
 
   @override
   _CommentCardState createState() => _CommentCardState();
@@ -20,7 +22,7 @@ class _CommentCardState extends State<CommentCard> {
         children: [
           CircleAvatar(
             backgroundImage: NetworkImage(
-              'https://cdn.pixabay.com/photo/2021/11/21/22/08/british-shorthair-6815375_960_720.jpg',
+              widget.snap['profilePic'],
             ),
             radius: 18,
           ),
@@ -37,14 +39,14 @@ class _CommentCardState extends State<CommentCard> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: 'username',
+                          text: widget.snap['name'],
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: primaryColor,
                           ),
                         ),
                         TextSpan(
-                          text: 'some description to insert',
+                          text: ' ${widget.snap['text']}',
                           style: const TextStyle(
                             color: secondaryColor,
                           ),
@@ -55,8 +57,10 @@ class _CommentCardState extends State<CommentCard> {
                   Padding(
                     padding: const EdgeInsets.only(top: 4),
                     child: Text(
-                      '23/01/22',
-                      style: TextStyle(
+                      DateFormat.yMMMd().format(
+                        widget.snap['datePublished'].toDate(),
+                      ),
+                      style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
                         color: secondaryColor,
