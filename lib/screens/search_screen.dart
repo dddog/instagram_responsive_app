@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:instagram_responsive_app/screens/profile_screen.dart';
 import 'package:instagram_responsive_app/utils/colors.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -10,13 +12,13 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  TextEditingController _searchController = TextEditingController();
+  TextEditingController searchController = TextEditingController();
   bool _isShowUsers = false;
 
   @override
   void dispose() {
     super.dispose();
-    _searchController.dispose();
+    searchController.dispose();
   }
 
   @override
@@ -25,7 +27,7 @@ class _SearchScreenState extends State<SearchScreen> {
       appBar: AppBar(
         backgroundColor: mobileBackgroundColor,
         title: TextFormField(
-          controller: _searchController,
+          controller: searchController,
           decoration: InputDecoration(
             labelText: 'Search for a user',
           ),
@@ -43,12 +45,12 @@ class _SearchScreenState extends State<SearchScreen> {
                   .collection('users')
                   .where(
                     'username',
-                    isGreaterThanOrEqualTo: _searchController.text,
+                    isGreaterThanOrEqualTo: searchController.text,
                   )
                   .get(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(),
                   );
                 }
@@ -56,21 +58,56 @@ class _SearchScreenState extends State<SearchScreen> {
                 return ListView.builder(
                   itemCount: (snapshot.data! as dynamic).docs.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: NetworkImage(
-                            (snapshot.data! as dynamic).docs[index]
-                                ['photoUrl']),
+                    return InkWell(
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ProfileScreen(
+                            uid: (snapshot.data! as dynamic).docs[index]['uid'],
+                          ),
+                        ),
                       ),
-                      title: Text(
-                        (snapshot.data! as dynamic).docs[index]['username'],
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            (snapshot.data! as dynamic).docs[index]['photoUrl'],
+                          ),
+                          radius: 16,
+                        ),
+                        title: Text(
+                          (snapshot.data! as dynamic).docs[index]['username'],
+                        ),
                       ),
                     );
                   },
                 );
               },
             )
-          : Text('Posts'),
+          : FutureBuilder(
+              future: FirebaseFirestore.instance
+                  .collection('posts')
+                  .orderBy('datePublished')
+                  .get(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                return StaggeredGridView.countBuilder(
+                  crossAxisCount: 3,
+                  itemCount: (snapshot.data! as dynamic).docs.length,
+                  itemBuilder: (context, index) => Image.network(
+                    (snapshot.data! as dynamic).docs[index]['postUrl'],
+                    fit: BoxFit.cover,
+                  ),
+                  staggeredTileBuilder: (index) => StaggeredTile.count(
+                    (index % 7 == 0) ? 2 : 1,
+                    (index % 7 == 0) ? 2 : 1,
+                  ),
+                );
+              },
+            ),
     );
   }
 }
